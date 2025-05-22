@@ -1,73 +1,99 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../common/Button';
 import Card from '../common/Card';
 
-const DiagnosticResults = ({ questions, testAnswers }) => {
-  const [isLoading, setIsLoading] = useState(false); // For future use
-  const [error, setError] = useState(null); // For future use
-
-  if (isLoading) {
-    return <div className="text-center p-10">Cargando resultados...</div>;
+const DiagnosticResults = ({ analysisResults, sessionId }) => {
+  if (!analysisResults) {
+    return (
+      <Card className="text-center p-10 max-w-2xl mx-auto my-10">
+        <h1 className="text-2xl font-bold text-warning mb-4">Resultados no disponibles</h1>
+        <p className="text-text">No se han proporcionado resultados del análisis para mostrar.</p>
+        <Link to="/test-diagnostico">
+          <Button variant="primary" className="mt-6">Realizar Test</Button>
+        </Link>
+      </Card>
+    );
   }
 
-  if (error) {
-    return <div className="text-center p-10 text-danger">Error al cargar los resultados: {error}</div>;
-  }
+  const { primaryArea, riskLevel, recommendations, detailedScores } = analysisResults;
 
-  if (!questions || !testAnswers) {
-    return <div className="text-center p-10 text-warning">No se han proporcionado datos para mostrar los resultados.</div>;
-  }
-
-  const getAnswerText = (question, answerValue) => {
-    if (answerValue === null || answerValue === undefined || answerValue === 'not_answered') {
-      return <span className="text-gray-500 italic">No respondida</span>;
+  const getRiskLevelClass = (level) => {
+    switch (level?.toLowerCase()) {
+      case 'alto':
+        return 'text-red-600 font-bold';
+      case 'medio':
+        return 'text-yellow-600 font-bold';
+      case 'bajo':
+        return 'text-green-600 font-bold';
+      case 'informativo':
+        return 'text-blue-600 font-bold';
+      default:
+        return 'text-gray-700 font-bold';
     }
-    if (question.type === 'yes-no') {
-      return answerValue === 'yes' ? 'Sí' : 'No';
-    }
-    if (question.type === 'multiple-choice' && question.options) {
-      const selectedOption = question.options.find(opt => opt.value === answerValue);
-      return selectedOption ? selectedOption.text : <span className="text-warning italic">Opción no válida</span>;
-    }
-    return <span className="text-text">{String(answerValue)}</span>;
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-8 max-w-3xl bg-white shadow-lg rounded-lg my-10">
+    <div className="container mx-auto p-4 md:p-8 max-w-3xl bg-white shadow-xl rounded-lg my-10">
       <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-primary">Resultados de tu Diagnóstico de Seguridad</h1>
+        <h1 className="text-3xl font-bold text-primary">Resultados Detallados de tu Diagnóstico Legal</h1>
+        {sessionId && (
+          <p className="text-sm text-secondary mt-2">ID de Sesión del Test: {sessionId}</p>
+        )}
       </header>
 
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold text-secondary mb-3">Resumen General</h2>
-        <Card className="p-6 bg-light">
-          <p className="text-text">
-            Basado en tus respuestas, hemos identificado algunas áreas potenciales de riesgo y oportunidades
-            de mejora en tu seguridad digital. Este informe detalla tus respuestas para que puedas
-            revisarlas. Te recomendamos discutir estos resultados con nuestro asistente de IA para obtener
-            orientación inmediata o solicitar asesoría personalizada con nuestros expertos legales para un
-            análisis más profundo.
-          </p>
-        </Card>
-      </section>
+      <Card className="mb-6 p-6 bg-light">
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold text-secondary mb-1">Área Principal de Enfoque:</h2>
+          <p className="text-lg text-text font-semibold">{primaryArea || 'No determinado'}</p>
+        </section>
 
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold text-secondary mb-4">Revisión Detallada de Respuestas</h2>
-        <div className="space-y-4">
-          {questions.map((question) => (
-            <Card key={question.id} className="p-4">
-              <h3 className="text-md font-semibold text-text mb-2">{question.text}</h3>
-              <p className="text-sm">
-                Tu respuesta: {getAnswerText(question, testAnswers[question.id])}
-              </p>
-            </Card>
-          ))}
-        </div>
-      </section>
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold text-secondary mb-1">Nivel de Riesgo Estimado:</h2>
+          <p className={`text-lg ${getRiskLevelClass(riskLevel)}`}>{riskLevel?.toUpperCase() || 'No determinado'}</p>
+        </section>
+      </Card>
+
+      <Card className="mb-8 p-6">
+        <section>
+          <h2 className="text-xl font-semibold text-secondary mb-4">Recomendaciones Preliminares</h2>
+          {recommendations && recommendations.length > 0 ? (
+            <ul className="list-disc list-inside space-y-2 text-text">
+              {recommendations.map((rec, index) => (
+                <li key={index}>{rec}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-text italic">No hay recomendaciones específicas en este momento.</p>
+          )}
+        </section>
+      </Card>
+
+      {detailedScores && Object.keys(detailedScores).length > 0 && (
+        <Card className="mb-8 p-6">
+          <section>
+            <h2 className="text-xl font-semibold text-secondary mb-4">Análisis por Área</h2>
+            <div className="space-y-3">
+              {Object.entries(detailedScores).map(([areaId, data]) => (
+                <div key={areaId} className="p-3 bg-gray-50 rounded-md">
+                  <h3 className="text-md font-semibold text-gray-700">{data.name || areaId}</h3>
+                  <p className="text-sm text-gray-600">
+                    Puntuación de Relevancia: {data.score}
+                    {data.criticalIssues > 0 && (
+                      <span className="ml-2 text-red-500 font-semibold">
+                        ({data.criticalIssues} {data.criticalIssues === 1 ? 'Problema Crítico' : 'Problemas Críticos'})
+                      </span>
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </Card>
+      )}
 
       <section className="pt-6 border-t">
-        <h2 className="text-xl font-semibold text-secondary mb-4 text-center">Siguientes Pasos</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-6 text-center">Siguientes Pasos</h2>
         <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
           <Link to="/chat">
             <Button variant="primary" size="md" className="w-full">

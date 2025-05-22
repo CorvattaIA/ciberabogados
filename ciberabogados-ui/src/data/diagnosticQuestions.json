@@ -1,0 +1,113 @@
+{
+  "areas": [
+    {
+      "id": "laboral",
+      "nombre": "Laboral",
+      "preguntas": [
+        {
+          "id": "laboral_q1",
+          "texto": "¿Ha tenido problemas recientes con su empleador o empleados relacionados con el contrato, despidos, salarios o condiciones de trabajo?",
+          "tipo_respuesta": "si_no_detalle",
+          "detalle_placeholder": "Por favor, describa brevemente el problema."
+        },
+        {
+          "id": "laboral_q2",
+          "texto": "¿Cuenta su empresa con un Reglamento Interno de Trabajo y políticas de acoso laboral actualizadas y comunicadas?",
+          "tipo_respuesta": "si_no"
+        },
+        {
+          "id": "laboral_q3",
+          "texto": "¿Qué tipo de contrato laboral es el más común en su situación/empresa?",
+          "tipo_respuesta": "multiple_choice",
+          "opciones": [
+            {"valor": "indefinido", "texto": "Indefinido"},
+            {"valor": "termino_fijo", "texto": "Término Fijo"},
+            {"valor": "obra_labor", "texto": "Obra o Labor"},
+            {"valor": "prestacion_servicios", "texto": "Prestación de Servicios"},
+            {"valor": "no_aplica", "texto": "No aplica / No estoy seguro"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "comercial",
+      "nombre": "Comercial",
+      "preguntas": [
+        {
+          "id": "comercial_q1",
+          "texto": "¿Tiene contratos comerciales importantes (con clientes o proveedores) que necesiten revisión o presenten conflictos?",
+          "tipo_respuesta": "si_no_detalle",
+          "detalle_placeholder": "Describa brevemente la situación del contrato."
+        },
+        {
+          "id": "comercial_q2",
+          "texto": "¿Está su empresa al día con la normativa de protección de datos personales (GDPR, LOPD u similar)?",
+          "tipo_respuesta": "si_no_talvez",
+          "opciones": [
+             {"valor": "si", "texto": "Sí"},
+             {"valor": "no", "texto": "No"},
+             {"valor": "talvez", "texto": "No estoy seguro"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "administrativo",
+      "nombre": "Administrativo",
+      "preguntas": [
+        {
+          "id": "administrativo_q1",
+          "texto": "¿Ha tenido algún procedimiento o disputa con una entidad gubernamental recientemente (multas, licencias, permisos)?",
+          "tipo_respuesta": "si_no_detalle",
+          "detalle_placeholder": "Describa la situación administrativa."
+        }
+      ]
+    },
+    {
+      "id": "publico",
+      "nombre": "Público",
+      "preguntas": [
+        {
+          "id": "publico_q1",
+          "texto": "¿Participa su empresa en licitaciones públicas o tiene contratos con el sector público?",
+          "tipo_respuesta": "si_no"
+        }
+      ]
+    },
+    {
+      "id": "civil",
+      "nombre": "Civil (General)",
+      "preguntas": [
+        {
+          "id": "civil_q1",
+          "texto": "¿Tiene alguna disputa relacionada con propiedades, herencias, deudas (no comerciales) o contratos civiles?",
+          "tipo_respuesta": "si_no_detalle",
+          "detalle_placeholder": "Describa la disputa civil."
+        }
+      ]
+    },
+    {
+      "id": "familia",
+      "nombre": "Familia",
+      "preguntas": [
+        {
+          "id": "familia_q1",
+          "texto": "¿Necesita asesoría en temas de divorcio, custodia de hijos, pensión alimenticia o acuerdos prematrimoniales?",
+          "tipo_respuesta": "si_no"
+        }
+      ]
+    },
+    {
+      "id": "tributario",
+      "nombre": "Tributario",
+      "preguntas": [
+        {
+          "id": "tributario_q1",
+          "texto": "¿Tiene dudas sobre su declaración de impuestos, ha recibido notificaciones de la autoridad tributaria o necesita planificación fiscal?",
+          "tipo_respuesta": "si_no_detalle",
+          "detalle_placeholder": "Describa su consulta tributaria."
+        }
+      ]
+    }
+  ]
+}
