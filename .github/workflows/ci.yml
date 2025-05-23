@@ -1,0 +1,72 @@
+name: Ciberabogados CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x] # Specify Node.js versions
+
+    defaults:
+      run:
+        working-directory: ./frontend # Assuming React app is in /frontend
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json # Path to lock file
+
+    - name: Install dependencies
+      run: npm ci # Use 'npm install' if no package-lock.json or issues with ci
+
+    - name: Lint code
+      run: npm run lint
+
+    - name: Check formatting
+      # Assuming 'npm run format' uses Prettier to write.
+      # For a check-only command, you might configure Prettier with a check flag.
+      # If 'npm run format' is 'prettier --write .', this step would format.
+      # A common check command is 'prettier --check .'.
+      # If your 'format' script is just 'prettier --write .', you might need a separate 'format:check'
+      # For now, let's assume 'npm run format -- --check' or similar is available or
+      # that running the formatter and seeing if it produces changes is the check.
+      # Using a more explicit check:
+      run: npx prettier --check . # Checks formatting using npx prettier directly from ./frontend
+
+    - name: Run tests
+      run: npm test # This will use the placeholder test script
+
+    - name: Build application
+      run: npm run build
+
+    # Placeholder for deployment to Vercel/Netlify (requires secrets and specific actions)
+    # - name: Deploy to Vercel/Netlify Preview
+    #   if: github.event_name == 'pull_request'
+    #   run: |
+    #     # Add Vercel/Netlify deployment commands here
+    #     # e.g., npx vercel deploy --token=$VERCEL_TOKEN --prebuilt (for Vercel)
+    #     echo "Deployment to Preview Environment - Placeholder"
+    #   env:
+    #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }} # Example
+
+    # - name: Deploy to Vercel/Netlify Production
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: |
+    #     # Add Vercel/Netlify deployment commands here for production
+    #     # e.g., npx vercel deploy --token=$VERCEL_TOKEN --prod --prebuilt (for Vercel)
+    #     echo "Deployment to Production Environment - Placeholder"
+    #   env:
+    #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }} # Example
